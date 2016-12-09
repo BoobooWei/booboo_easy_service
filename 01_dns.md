@@ -1,14 +1,6 @@
 ## DNS域名解析服务
 
-- [DNS域名解析服务](#dns域名解析服务)
-	- [DNS服务](#dns服务)
-	- [DNS的实现原理](#dns的实现原理)
-	- [实战项目1:在企业内部搭建一台域名解析服务器DNS正反解析](#实战项目1在企业内部搭建一台域名解析服务器dns正反解析)
-	- [实战项目2:在企业内部搭建两台域名解析服务器做DNS主辅同步](#实战项目2在企业内部搭建两台域名解析服务器做dns主辅同步)
-	- [排错记录](#排错记录)
-	- [配置文件详细解析](#配置文件详细解析)
-	- [总结](#总结)
----
+[TOC]
 
 > 课程要求
 1. 在企业内部搭建一台域名解析服务器DNS正反解析
@@ -20,22 +12,13 @@
 
 全称是domain name server域名解析服务。
 
-我们知道每个联网的计算机都有一个ip地址吧？Ip地址是用来做什么的呢？Ip地址是用来和互联网上别的机器进行通讯的。
-但是ip地址很难记吧？一两个ip地址可能还好，但是，我们每天要访问的网页不仅仅只有一两个吧？
+我们知道每个联网的计算机都有一个ip地址吧？Ip地址是用来做什么的呢？Ip地址是用来和互联网上别的机器进行通讯的。但是ip地址很难记吧？一两个ip地址可能还好，但是，我们每天要访问的网页不仅仅只有一两个吧？
 
-我们记得都是什么呢？www.baidu.com. www.sina.com。我们记住的其实都是字符，都是域名。
-就像我们的电话号码，很难记，于是我们把电话号码存到手机里，给他起个昵称或者直接输入人名对吧，把电话号码对应成人名吧？
-然后打电话的时候就直接找到这个人名就好了。
+我们记得都是什么呢？www.baidu.com. www.sina.com。我们记住的其实都是字符，都是域名。就像我们的电话号码，很难记，于是我们把电话号码存到手机里，给他起个昵称或者直接输入人名对吧，把电话号码对应成人名吧？然后打电话的时候就直接找到这个人名就好了。
 
-所以我们系统也是一样，会把ip地址对应成一个主机名。在我们系统里有这么一个文件，就是专门用来做对应关系的，
-这个文件叫`/etc/hosts/`，我们可以打开来看一下，一条记录一行，行里面就是主机名和ip地址，当然一个ip地址可以对应多个
-主机名，就像人有很多的昵称一样。
+所以我们系统也是一样，会把ip地址对应成一个主机名。在我们系统里有这么一个文件，就是专门用来做对应关系的，这个文件叫`/etc/hosts/`，我们可以打开来看一下，一条记录一行，行里面就是主机名和ip地址，当然一个ip地址可以对应多个主机名，就像人有很多的昵称一样。
 
-那么这样是不是就解决问题了，当我们想要访问一个网站的时候，我们就不用输入ip地址，而是可以直接输入主机名就行了，
-机器会帮我们做一个解析，把主机名对应成ip地址进行通信。早期这样做的确没问题，但是随着互联网愈发的壮大，这个文件
-就不那么实用了。我们要在机器上配置大量的对应关系，是非常耗时，非常麻烦的，而且要配置的机器可不止一台。比如说我
-是百度，我希望世界上所有的人都要来访问我的网页，那么，我是不是需要让世界上所有的人都去添加我的ip地址和主机名的
-对应关系。这个是非常难做到的事情，工作量太大。于是我们就引入了一种新的机制。
+那么这样是不是就解决问题了，当我们想要访问一个网站的时候，我们就不用输入ip地址，而是可以直接输入主机名就行了，机器会帮我们做一个解析，把主机名对应成ip地址进行通信。早期这样做的确没问题，但是随着互联网愈发的壮大，这个文件就不那么实用了。我们要在机器上配置大量的对应关系，是非常耗时，非常麻烦的，而且要配置的机器可不止一台。比如说我是百度，我希望世界上所有的人都要来访问我的网页，那么，我是不是需要让世界上所有的人都去添加我的ip地址和主机名的对应关系。这个是非常难做到的事情，工作量太大。于是我们就引入了一种新的机制。
 
 ### DNS的实现原理
 
@@ -81,8 +64,7 @@ Windows上面也有
 1. 本地有这个域，能够解析到
 2. 本地有缓存，其他人已经来问过sina是谁，那么DNS服务器可以将该结果直接返回给客户。
 
-不知道的话就会去找自己的上级域，然后通过等待上级域的反馈，将反馈信息返回给客户端。
-这种方式叫做递归查询。
+不知道的话就会去找自己的上级域，然后通过等待上级域的反馈，将反馈信息返回给客户端。这种方式叫做递归查询。
 
 那么还有一种情况就是，DNS去询问上级域，然后上级域将对应的同级DNS服务器反馈回来，由客户端去询问新的DNS服务器来找寻网””址对应的IP地址。这种叫做迭代查询
 
@@ -228,266 +210,7 @@ Complete!
 /usr/sbin/rndc
 /usr/sbin/rndc-confgen
 /usr/share/doc/bind-9.8.2
-/usr/share/doc/bind-9.8.2/CHANGES
-/usr/share/doc/bind-9.8.2/COPYRIGHT
-/usr/share/doc/bind-9.8.2/Copyright
-/usr/share/doc/bind-9.8.2/README
-/usr/share/doc/bind-9.8.2/arm
-/usr/share/doc/bind-9.8.2/arm/Bv9ARM-book.xml
-/usr/share/doc/bind-9.8.2/arm/Bv9ARM.ch01.html
-/usr/share/doc/bind-9.8.2/arm/Bv9ARM.ch02.html
-/usr/share/doc/bind-9.8.2/arm/Bv9ARM.ch03.html
-/usr/share/doc/bind-9.8.2/arm/Bv9ARM.ch04.html
-/usr/share/doc/bind-9.8.2/arm/Bv9ARM.ch05.html
-/usr/share/doc/bind-9.8.2/arm/Bv9ARM.ch06.html
-/usr/share/doc/bind-9.8.2/arm/Bv9ARM.ch07.html
-/usr/share/doc/bind-9.8.2/arm/Bv9ARM.ch08.html
-/usr/share/doc/bind-9.8.2/arm/Bv9ARM.ch09.html
-/usr/share/doc/bind-9.8.2/arm/Bv9ARM.ch10.html
-/usr/share/doc/bind-9.8.2/arm/Bv9ARM.html
-/usr/share/doc/bind-9.8.2/arm/Bv9ARM.pdf
-/usr/share/doc/bind-9.8.2/arm/Makefile
-/usr/share/doc/bind-9.8.2/arm/Makefile.in
-/usr/share/doc/bind-9.8.2/arm/README-SGML
-/usr/share/doc/bind-9.8.2/arm/dnssec.xml
-/usr/share/doc/bind-9.8.2/arm/isc-logo.eps
-/usr/share/doc/bind-9.8.2/arm/isc-logo.pdf
-/usr/share/doc/bind-9.8.2/arm/latex-fixup.pl
-/usr/share/doc/bind-9.8.2/arm/libdns.xml
-/usr/share/doc/bind-9.8.2/arm/man.arpaname.html
-/usr/share/doc/bind-9.8.2/arm/man.ddns-confgen.html
-/usr/share/doc/bind-9.8.2/arm/man.dig.html
-/usr/share/doc/bind-9.8.2/arm/man.dnssec-dsfromkey.html
-/usr/share/doc/bind-9.8.2/arm/man.dnssec-keyfromlabel.html
-/usr/share/doc/bind-9.8.2/arm/man.dnssec-keygen.html
-/usr/share/doc/bind-9.8.2/arm/man.dnssec-revoke.html
-/usr/share/doc/bind-9.8.2/arm/man.dnssec-settime.html
-/usr/share/doc/bind-9.8.2/arm/man.dnssec-signzone.html
-/usr/share/doc/bind-9.8.2/arm/man.genrandom.html
-/usr/share/doc/bind-9.8.2/arm/man.host.html
-/usr/share/doc/bind-9.8.2/arm/man.isc-hmac-fixup.html
-/usr/share/doc/bind-9.8.2/arm/man.named-checkconf.html
-/usr/share/doc/bind-9.8.2/arm/man.named-checkzone.html
-/usr/share/doc/bind-9.8.2/arm/man.named-journalprint.html
-/usr/share/doc/bind-9.8.2/arm/man.named.html
-/usr/share/doc/bind-9.8.2/arm/man.nsec3hash.html
-/usr/share/doc/bind-9.8.2/arm/man.nsupdate.html
-/usr/share/doc/bind-9.8.2/arm/man.rndc-confgen.html
-/usr/share/doc/bind-9.8.2/arm/man.rndc.conf.html
-/usr/share/doc/bind-9.8.2/arm/man.rndc.html
-/usr/share/doc/bind-9.8.2/arm/managed-keys.xml
-/usr/share/doc/bind-9.8.2/arm/pkcs11.xml
-/usr/share/doc/bind-9.8.2/arm/releaseinfo.xml
-/usr/share/doc/bind-9.8.2/draft
-/usr/share/doc/bind-9.8.2/draft/draft-faltstrom-uri-06.txt
-/usr/share/doc/bind-9.8.2/draft/draft-ietf-6man-text-addr-representation-07.txt
-/usr/share/doc/bind-9.8.2/draft/draft-ietf-behave-address-format-07.txt
-/usr/share/doc/bind-9.8.2/draft/draft-ietf-behave-dns64-11.txt
-/usr/share/doc/bind-9.8.2/draft/draft-ietf-dnsext-axfr-clarify-14.txt
-/usr/share/doc/bind-9.8.2/draft/draft-ietf-dnsext-dns-tcp-requirements-03.txt
-/usr/share/doc/bind-9.8.2/draft/draft-ietf-dnsext-dnssec-bis-updates-12.txt
-/usr/share/doc/bind-9.8.2/draft/draft-ietf-dnsext-dnssec-registry-fixes-06.txt
-/usr/share/doc/bind-9.8.2/draft/draft-ietf-dnsext-ecc-key-07.txt
-/usr/share/doc/bind-9.8.2/draft/draft-ietf-dnsext-interop3597-02.txt
-/usr/share/doc/bind-9.8.2/draft/draft-ietf-dnsext-rfc2671bis-edns0-05.txt
-/usr/share/doc/bind-9.8.2/draft/draft-ietf-dnsext-rfc2672bis-dname-19.txt
-/usr/share/doc/bind-9.8.2/draft/draft-ietf-dnsext-rfc3597-bis-02.txt
-/usr/share/doc/bind-9.8.2/draft/draft-ietf-dnsext-tsig-md5-deprecated-03.txt
-/usr/share/doc/bind-9.8.2/draft/draft-ietf-dnsop-bad-dns-res-05.txt
-/usr/share/doc/bind-9.8.2/draft/draft-ietf-dnsop-dnssec-key-timing-02.txt
-/usr/share/doc/bind-9.8.2/draft/draft-ietf-dnsop-dnssec-trust-history-01.txt
-/usr/share/doc/bind-9.8.2/draft/draft-ietf-dnsop-inaddr-required-07.txt
-/usr/share/doc/bind-9.8.2/draft/draft-ietf-dnsop-name-server-management-reqs-02.txt
-/usr/share/doc/bind-9.8.2/draft/draft-ietf-dnsop-respsize-06.txt
-/usr/share/doc/bind-9.8.2/draft/draft-kato-dnsop-local-zones-00.txt
-/usr/share/doc/bind-9.8.2/draft/draft-kerr-ixfr-only-01.txt
-/usr/share/doc/bind-9.8.2/draft/draft-mekking-dnsop-auto-cpsync-00.txt
-/usr/share/doc/bind-9.8.2/draft/draft-yao-dnsext-bname-04.txt
-/usr/share/doc/bind-9.8.2/draft/update
-/usr/share/doc/bind-9.8.2/misc
-/usr/share/doc/bind-9.8.2/misc/Makefile
-/usr/share/doc/bind-9.8.2/misc/Makefile.in
-/usr/share/doc/bind-9.8.2/misc/dnssec
-/usr/share/doc/bind-9.8.2/misc/format-options.pl
-/usr/share/doc/bind-9.8.2/misc/ipv6
-/usr/share/doc/bind-9.8.2/misc/migration
-/usr/share/doc/bind-9.8.2/misc/migration-4to9
-/usr/share/doc/bind-9.8.2/misc/options
-/usr/share/doc/bind-9.8.2/misc/rfc-compliance
-/usr/share/doc/bind-9.8.2/misc/roadmap
-/usr/share/doc/bind-9.8.2/misc/sdb
-/usr/share/doc/bind-9.8.2/misc/sort-options.pl
-/usr/share/doc/bind-9.8.2/named.conf.default
-/usr/share/doc/bind-9.8.2/rfc
-/usr/share/doc/bind-9.8.2/rfc/index.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc1032.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc1033.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc1034.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc1035.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc1101.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc1122.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc1123.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc1183.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc1348.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc1535.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc1536.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc1537.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc1591.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc1611.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc1612.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc1706.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc1712.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc1750.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc1876.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc1886.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc1912.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc1982.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc1995.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc1996.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc2052.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc2104.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc2119.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc2133.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc2136.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc2137.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc2163.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc2168.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc2181.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc2230.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc2308.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc2317.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc2373.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc2374.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc2375.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc2418.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc2535.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc2536.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc2537.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc2538.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc2539.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc2540.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc2541.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc2553.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc2671.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc2672.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc2673.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc2782.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc2825.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc2826.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc2845.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc2874.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc2915.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc2929.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc2930.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc2931.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc3007.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc3008.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc3071.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc3090.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc3110.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc3123.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc3152.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc3197.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc3225.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc3226.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc3258.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc3363.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc3364.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc3425.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc3445.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc3467.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc3490.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc3491.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc3492.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc3493.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc3513.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc3596.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc3597.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc3645.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc3655.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc3658.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc3755.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc3757.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc3833.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc3845.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc3901.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc4025.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc4033.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc4034.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc4035.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc4074.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc4159.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc4193.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc4255.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc4294.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc4339.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc4343.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc4367.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc4398.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc4408.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc4431.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc4470.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc4471.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc4472.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc4509.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc4634.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc4635.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc4641.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc4648.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc4697.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc4701.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc4892.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc4955.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc4956.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc5001.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc5011.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc5155.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc5205.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc5452.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc5507.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc5625.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc5702.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc5933.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc6303.txt.gz
-/usr/share/doc/bind-9.8.2/rfc/rfc952.txt.gz
-/usr/share/doc/bind-9.8.2/rfc1912.txt
-/usr/share/doc/bind-9.8.2/sample
-/usr/share/doc/bind-9.8.2/sample/etc
-/usr/share/doc/bind-9.8.2/sample/etc/named.conf
-/usr/share/doc/bind-9.8.2/sample/etc/named.rfc1912.zones
-/usr/share/doc/bind-9.8.2/sample/var
-/usr/share/doc/bind-9.8.2/sample/var/named
-/usr/share/doc/bind-9.8.2/sample/var/named/data
-/usr/share/doc/bind-9.8.2/sample/var/named/my.external.zone.db
-/usr/share/doc/bind-9.8.2/sample/var/named/my.internal.zone.db
-/usr/share/doc/bind-9.8.2/sample/var/named/named.ca
-/usr/share/doc/bind-9.8.2/sample/var/named/named.empty
-/usr/share/doc/bind-9.8.2/sample/var/named/named.localhost
-/usr/share/doc/bind-9.8.2/sample/var/named/named.loopback
-/usr/share/doc/bind-9.8.2/sample/var/named/slaves
-/usr/share/doc/bind-9.8.2/sample/var/named/slaves/my.ddns.internal.zone.db
-/usr/share/doc/bind-9.8.2/sample/var/named/slaves/my.slave.internal.zone.db
-/usr/share/man/man1/arpaname.1.gz
-/usr/share/man/man5/named.conf.5.gz
-/usr/share/man/man5/rndc.conf.5.gz
-/usr/share/man/man8/ddns-confgen.8.gz
-/usr/share/man/man8/dnssec-dsfromkey.8.gz
-/usr/share/man/man8/dnssec-keyfromlabel.8.gz
-/usr/share/man/man8/dnssec-keygen.8.gz
-/usr/share/man/man8/dnssec-revoke.8.gz
-/usr/share/man/man8/dnssec-settime.8.gz
-/usr/share/man/man8/dnssec-signzone.8.gz
-/usr/share/man/man8/genrandom.8.gz
-/usr/share/man/man8/isc-hmac-fixup.8.gz
-/usr/share/man/man8/lwresd.8.gz
-/usr/share/man/man8/named-checkconf.8.gz
-/usr/share/man/man8/named-checkzone.8.gz
-/usr/share/man/man8/named-compilezone.8.gz
-/usr/share/man/man8/named-journalprint.8.gz
-/usr/share/man/man8/named.8.gz
-/usr/share/man/man8/nsec3hash.8.gz
-/usr/share/man/man8/rndc-confgen.8.gz
-/usr/share/man/man8/rndc.8.gz
+... ...
 /var/log/named.log
 /var/named
 /var/named/data
@@ -652,14 +375,9 @@ Address:	172.25.0.11#53
 
 ### 实战项目2:在企业内部搭建两台域名解析服务器做DNS主辅同步
 
-主辅同步：如果有数万台客户机在同一时间来访问DNS服务器，会导致服务器承受很大的压力，
-这时候我可能需要另外一个人来帮我分担压力，或者说如果主服务器遇到什么问题，我能有另
-外一个人直接顶上我的工作，这时候就可以用到一个辅助服务器了。
+主辅同步：如果有数万台客户机在同一时间来访问DNS服务器，会导致服务器承受很大的压力，这时候我可能需要另外一个人来帮我分担压力，或者说如果主服务器遇到什么问题，我能有另外一个人直接顶上我的工作，这时候就可以用到一个辅助服务器了。
 
-那么很显然，辅助服务器需要和主服务器用一样的配置，配置里写的数据也基本相同。对于我们
-DNS服务器来说，其实它的数据文件并不固定，对应的IP和主机名都可能会经常发生变化，那么
-当那个时候，我希望能够修改主机上的某一个文件的时候，从机上的文件也能够被自动被修改，
-保持两台机器完全同步一致。
+那么很显然，辅助服务器需要和主服务器用一样的配置，配置里写的数据也基本相同。对于我们DNS服务器来说，其实它的数据文件并不固定，对应的IP和主机名都可能会经常发生变化，那么当那个时候，我希望能够修改主机上的某一个文件的时候，从机上的文件也能够被自动被修改，保持两台机器完全同步一致。
 
 这时候就有了一种配置方法，叫做主辅同步。
 
@@ -857,7 +575,9 @@ Address:	172.25.0.10#53
 ```
 
 ### 排错记录
-#### 1.服务启动不了
+
+#### 服务启动不了
+
 ```shell
 [root@rhel7 ~]# systemctl start named
 Job for named.service failed. See 'systemctl status named.service' and 'journalctl -xn' for details.
@@ -875,14 +595,15 @@ Aug 02 04:19:20 rhel7 systemd[1]: Failed to start Berkeley Internet Name Domain 
 Aug 02 04:19:20 rhel7 systemd[1]: Unit named.service entered failed state.
 ```
 
-ps：当服务启动不了的时候，报错内容中说我们可以通过以下两个命令来查看，`systemctl status named.service` 或者 `journalctl -xn`
-此时我们可以去执行以下上面命令中的任何一个，都可以看到详细的报错信息。
+ps：当服务启动不了的时候，报错内容中说我们可以通过以下两个命令来查看，`systemctl status named.service` 或者 `journalctl -xn`此时我们可以去执行以下上面命令中的任何一个，都可以看到详细的报错信息。
 
 `Aug 02 04:19:20 rhel7 named-checkconf[2297]: /etc/named.rfc1912.zones:51: missing ';' before '}'`
+
 这条日志告诉我们，在配置文件`/etc/named.rfc1912.zones`的第51行中，`'}'`前少了一个`';'`。因此我们根据日志中的提示去修改配置文件即可。
 
 
-#### 2.服务启动不了
+#### 服务启动不了
+
 ```shell
 [root@rhel7 ~]# systemctl status named
 named.service - Berkeley Internet Name Domain (DNS)
@@ -936,7 +657,7 @@ ps:问题出在数据文件名和配置文件中指定的数据文件名不一�
 `/var/named/named.arpa.uplooking`
 
 
-#### 3.主辅同步缓冲文件只有一个
+#### 主辅同步缓冲文件只有一个
 ```shell
 [root@rhel7 ~]# ll /var/named/slaves/
 total 4
@@ -954,7 +675,7 @@ zone \"uplooking.com\" IN {
       };
 ```
 
-#### 4.主辅同步将从机的数据文件指定位置放在非slaves目录
+#### 主辅同步将从机的数据文件指定位置放在非slaves目录
 
 从服务器的配置文件放置的位置不在slaves目录下，而在其他目录下，则同步不成功。
 原因从三处排查
@@ -981,20 +702,20 @@ Chcon -u system_u  -r object_r  test
 
 同步成功。
 
-#### 5.如果启动服务时候太慢
+#### 如果启动服务时候太慢
 
 可以使用`/usr/sbin/rndc-confgen -a -r /etc/named.conf`
 
 这是一个秘钥加密产生的bug
 
-#### 6.有顺序的批量配置的写法：（简单了解一下）
+#### 有顺序的批量配置的写法：（简单了解一下）
 
 ```shell
 $GENERATE 1-100 stu$   A   172.25.0.$
 $GENERATE 1-200 $ PTR foundation$.ilt.example.com
 ```
 
-####7.从机数据文件的查看
+#### 从机数据文件的查看
 
 **7版本上无法查看**：因为从机在slaves目录下生成的配置文件是data类型的。
 **6版本上可以查看**：老版本是可以查看的。

@@ -1,11 +1,6 @@
 ## SAMBA文件共享服务
 
-- [SAMBA文件共享服务](#samba文件共享服务)
-	- [Samba的历史及原理](#samba的历史及原理)
-	- [Samba的作用](#samba的作用)
-	- [Samba的软件结构](#samba的软件结构)
-	- [项目实践1：配置samba共享](#项目实践1配置samba共享)
-	- [Samba的主配置文件/etc/samba/smb.conf详细解析](#samba的主配置文件etcsambasmbconf详细解析)
+[TOC]
 
 ### Samba的历史及原理
 

@@ -1,19 +1,7 @@
 ## 防火墙 iptables
 
-- [防火墙 iptables](#防火墙-iptables)
-	- [防火墙的作用](#防火墙的作用)
-	- [防火墙类型](#防火墙类型)
-	- [软件防火墙](#软件防火墙)
-	- [iptables语法](#iptables语法)
-		- [表table](#表table)
-		- [CMD动作](#cmd动作)
-		- [表当中包含链chain](#表当中包含链chain)
-		- [规则rule](#规则rule)
-		- [执行操作target](#执行操作target)
-	- [应用实例](#应用实例)
-	- [课堂练习题目](#课堂练习题目)
-	- [Firewalld的用法](#firewalld的用法)
-		- [Firewall-config](#firewall-config)
+[TOC]
+
 ---
 ### 防火墙的作用
 
@@ -96,71 +84,37 @@ iptables -t table CMD chain rule-matcher -j target
 3. 保存策略	`service iptables save` or `iptables-save > /etc/sysconfig/iptables`
 4. 开机后重新导入	`iptables-restore < /etc/sysconfig/iptables`
 
-##### 1.只允许172.25.0.250和你自己的服务器能够访问ftp服务（rhel6）
+>只允许172.25.0.250和你自己的服务器能够访问ftp服务（rhel6）
+
 ```shell
-来源 	-s 172.25.0.250
-	-s 172.25.0.11
-进来的	INPUT
----------
-目标
-端口号	--dport 21
-协议	-p tcp
---------------
-允许	ACCEPT
-～～～～～～～～～～～
 iptables -A INPUT -s 172.25.0.250 -p tcp --dport 21 -j  ACCEPT
 iptables -A INPUT -s 172.25.0.11 -p tcp --dport 21 -j ACCEPT
 iptables -A INPUT -p tcp --dport 21 -j DROP
-
-除了他们其他不允许
 ```
 
 
-##### 2.禁止ping包
+>禁止ping包
 
 ```shell
-进来	INPUT
-协议	icmp
----------
-扔掉
 iptables -A INPUT -p icmp -j DROP
 ```
 
-#### 3.仅允许172.25.0.0/24网段和172.25.15.0/24网段用户能够访问我的邮件服务器
+>仅允许172.25.0.0/24网段和172.25.15.0/24网段用户能够访问我的邮件服务器
+
 ```shell
-进来	INPUT
-来源	-s 172.25.0.0/24
-	-s 172.25.15.0/24
-------------------------
-协议	-p tcp
-端口	--dport 25
-------------------------
-允许	-j ACCEPT
---------------------------
-其他人都不允许
-==================================================
 iptables -A INPUT -s 172.25.0.0/24 -p tcp --dport 25 -j ACCEPT
 iptables -A INPUT -s 172.25.15.0/24 -p tcp --dport 25 -j ACCEPT
 iptables -A INPUT -p tcp --dport 25 -j DROP
 ```
 
-
-
-
-
 ### 课堂练习题目
 
 rhel6 172.25.x.11
+
 1. 清空规则
 2. 预设filter表INPUT是ACCEPT
 3. 仅允许172.25.254.250和172.25.254.X 能够ssh到我的服务器（rhel6 172.25.X.11）上
 ```shell
-进来	INPUT
-来源 	-s 172.25.254.250
-	-s 172.25.254.16
-协议	-p tcp
-端口号	--dport 22
-允许	-j ACCEPT
 iptables -A INPUT -s 172.25.254.250 -p tcp --dport 22 -j ACCEPT
 iptables -A INPUT -s 172.25.254.16 -p tcp --dport 22 -j ACCEPT
 iptables -A INPUT -p tcp --dport 22 -j DROP
@@ -168,11 +122,6 @@ iptables -A INPUT -p tcp --dport 22 -j DROP
 
 4. 仅允许172.25.254.0/24和172.25.X.0/24能够ping我的服务器
 ```shell
-INPUT
--s 172.25.254.0/24
--s 172.25.X.0/24
--p icmp
--j ACCEPT
 iptables -A INPUT -s 172.25.254.0/24 -p icmp -j ACCEPT
 iptables -A INPUT -s 172.25.16.0/24 -p icmp -j ACCEPT
 iptables -A INPUT -p icpm -j DROP
@@ -180,11 +129,6 @@ iptables -A INPUT -p icpm -j DROP
 
 5. 不允许172.25.254.254访问我的邮件服务器
 ```shell
-INPUT
--s 172.25.254.254
--p tcp
---dport 25
--j DROP
 iptables -A INPUT -s 172.25.254.254 -p tcp --dport 25 -j DROP
 ```
 
@@ -215,8 +159,9 @@ Firewalld是el7默认的防火墙，和iptables冲突，如果要使用其中之
 * 停止：`systemctl disable firewalld`
 * 禁用：`systemctl stop firewalld`
 
-可以通过1.firewall-config图形化工具 来控制
-        2.firewall-cmd  命令行工具
+可以通过
+1. firewall-config图形化工具 来控制
+2. firewall-cmd  命令行工具
 
 #### Firewall-config
 

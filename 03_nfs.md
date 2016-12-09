@@ -1,64 +1,34 @@
 ## NFS文件共享服务
 
-- [NFS文件共享服务](#nfs文件共享服务)
-	- [NFS是什么](#nfs是什么)
-	- [NFS的原理](#nfs的原理)
-	- [NFS的用处](#nfs的用处)
-	- [项目实践1：配置NFS网络共享文件服务器](#项目实践1配置nfs网络共享文件服务器)
-	- [配置文件详解](#配置文件详解)
-	- [项目实践2：自动挂接NFS](#项目实践2自动挂接nfs)
-		- [/etc/fstab](#etcfstab)
-		- [/etc/bashrc](#etcbashrc)
-		- [autofs 自动挂接服务](#autofs-自动挂接服务)
-	- [总结](#总结)
+[TOC]
 
 ---
 
 ### NFS是什么
 
-NFS（Network File System）即网络文件系统，SUN公司开发的,是FreeBSD支持的文件系统中的一种，它允许网络中的计
-算机之间通过TCP/IP网络共享资源。在NFS的应用中，本地NFS的客户端应用可以透明地读写位于远端NFS服务
-器上的文件，就像访问本地文件一样。
+NFS（Network File System）即网络文件系统，SUN公司开发的,是FreeBSD支持的文件系统中的一种，它允许网络中的计算机之间通过TCP/IP网络共享资源。在NFS的应用中，本地NFS的客户端应用可以透明地读写位于远端NFS服务器上的文件，就像访问本地文件一样。
 
 ### NFS的原理
 
-假设我们有一个服务器，两个客户端。
-客户端可以将网络中的NFS服务器共享的目录挂载到本地端的文件系统中，而在本地端的系统中看来，那个远程
-主机的目录就好像自己的一个磁盘分区一样。
+假设我们有一个服务器，两个客户端。客户端可以将网络中的NFS服务器共享的目录挂载到本地端的文件系统中，而在本地端的系统中看来，那个远程主机的目录就好像自己的一个磁盘分区一样。
 
-比如将配置好的NFS服务器上的`/var/share/student1`目录挂在到A客户端的`/home/share/student1`上
-面，那在客户端A上面进入`/home/share/student1`内，就可以看到NFS服务器系统中`/var/share/student1`
-目录下所有的内容了，并且可以执行`cd，cp，mv，rm`等命令。当然，权限要足够。
-这个`/var/share/student1`就好像NFS客户端的一个文件系统一样。
-所以，NFS也可以简单的看做是一个文件服务器（file system）
+比如将配置好的NFS服务器上的`/var/share/student1`目录挂在到A客户端的`/home/share/student1`上面，那在客户端A上面进入`/home/share/student1`内，就可以看到NFS服务器系统中`/var/share/student1`目录下所有的内容了，并且可以执行`cd，cp，mv，rm`等命令。当然，权限要足够。这个`/var/share/student1`就好像NFS客户端的一个文件系统一样。所以，NFS也可以简单的看做是一个文件服务器（file system）
 
 只要权限足够，客户端也可以对该目录下的内容进行读写操作等等。
 
-**NFS指的是一种服务** 既然是服务，肯定会用到一些监听端口，那NFS用的是什么端口进行数据传输的？
-我也不知道，谁都不知道。基本上NFS这个服务的端口开在2049端口，但由于文件系统非常复杂，NFS支持的功
-能又相当的多，每一个功能就会启用一些端口来传输数据，所以，NFS需要调用额外的端口，那额外的端口号又
-是什么呢？额外的端口号并不固定。因为NFS默认传输的端口是随机取用未被使用的小于1024的端口用于传输。
-但如此一来，客户端连接服务器又成了问题，客户端并不知道我要链接那些端口。
-这时候就需要用到远程过程调用RPC服务了 remote procedure call。
+**NFS指的是一种服务** 既然是服务，肯定会用到一些监听端口，那NFS用的是什么端口进行数据传输的？我也不知道，谁都不知道。基本上NFS这个服务的端口开在2049端口，但由于文件系统非常复杂，NFS支持的功能又相当的多，每一个功能就会启用一些端口来传输数据，所以，NFS需要调用额外的端口，那额外的端口号又是什么呢？额外的端口号并不固定。因为NFS默认传输的端口是随机取用未被使用的小于1024的端口用于传输。但如此一来，客户端连接服务器又成了问题，客户端并不知道我要链接那些端口。这时候就需要用到远程过程调用RPC服务了 remote procedure call。
+
 RPC就是指定NFS各功能对应的端口号，然后通知给客户端，让客户端可以连接到正确的端口上。
 
 ![20](pic/20.png)
 
-对于服务端来说，在NFS启动的时候，会自动向RPC注册其各个功能所需要的随机端口号，让RPC了解NFS各项
-功能的端口号，PID，NFS所监听的IP等等。当客户端通过111端口号向server端RPC发出NFS访问请求时候，
-RPC就会找到对应已注册的端口号，并返还给客户端，客户端就可以通过这些端口号与NFS发起链接。比如说我
-是NFS，我在启动的时候，就会告诉RPC，我的A端口用于做什么事情，我的B端口用于做什么事情，RPC就会将
-其端口注册信息登记，等客户端发起请求的时候就可以直接找到RPC，而不是直接找我NFS，RPC可以直接告知
-客户端所需请求对应的正确的端口号。
+对于服务端来说，在NFS启动的时候，会自动向RPC注册其各个功能所需要的随机端口号，让RPC了解NFS各项功能的端口号，PID，NFS所监听的IP等等。当客户端通过111端口号向server端RPC发出NFS访问请求时候，RPC就会找到对应已注册的端口号，并返还给客户端，客户端就可以通过这些端口号与NFS发起链接。比如说我是NFS，我在启动的时候，就会告诉RPC，我的A端口用于做什么事情，我的B端口用于做什么事情，RPC就会将其端口注册信息登记，等客户端发起请求的时候就可以直接找到RPC，而不是直接找我NFS，RPC可以直接告知客户端所需请求对应的正确的端口号。
 
-当客户端执行操作文件系统的各项命令时候，会转交给客户端的RPC，客户端RPC负责接受各个程序与对应的端
-口后负责对主机进行解析。所以要使用NFS时，无论是客户端还是服务端，都需要启动RPC。
+当客户端执行操作文件系统的各项命令时候，会转交给客户端的RPC，客户端RPC负责接受各个程序与对应的端口后负责对主机进行解析。所以要使用NFS时，无论是客户端还是服务端，都需要启动RPC。
 
-启动NFS之前，RPC就要先启动了，不然NFS无法向RPC注册，并且，RPC重启以后，原来注册的数据就没有了，
-所以RPC重新启动后，NFS也要重启，重新想RPC注册才行。
+启动NFS之前，RPC就要先启动了，不然NFS无法向RPC注册，并且，RPC重启以后，原来注册的数据就没有了，所以RPC重新启动后，NFS也要重启，重新想RPC注册才行。
 
-同样，A客户端对NFS服务器上的共享文件进行了修改后，B服务器能看到改后的文件，也就完成了各个主机之间文件的共享。
-所以如果重启了rpc，nfs也必须要重新启动，以便于重新像rpc注册相应的端口号。
+同样，A客户端对NFS服务器上的共享文件进行了修改后，B服务器能看到改后的文件，也就完成了各个主机之间文件的共享。所以如果重启了rpc，nfs也必须要重新启动，以便于重新像rpc注册相应的端口号。
 
 * NFS：处理客户端数据请求，
 * RPC：处理客户端链接请求。
@@ -160,46 +130,8 @@ setup-2.8.14-20.el6_4.1.noarch
 /usr/sbin/showmount
 /usr/sbin/sm-notify
 /usr/sbin/start-statd
-/usr/share/doc/nfs-utils-1.2.3
-/usr/share/doc/nfs-utils-1.2.3/ChangeLog
-/usr/share/doc/nfs-utils-1.2.3/INSTALL
-/usr/share/doc/nfs-utils-1.2.3/KNOWNBUGS
-/usr/share/doc/nfs-utils-1.2.3/Makefile
-/usr/share/doc/nfs-utils-1.2.3/Makefile.am
-/usr/share/doc/nfs-utils-1.2.3/Makefile.in
-/usr/share/doc/nfs-utils-1.2.3/NEW
-/usr/share/doc/nfs-utils-1.2.3/README
-/usr/share/doc/nfs-utils-1.2.3/THANKS
-/usr/share/doc/nfs-utils-1.2.3/TODO
-/usr/share/man/man5/exports.5.gz
-/usr/share/man/man5/nfs.5.gz
-/usr/share/man/man5/nfsmount.conf.5.gz
-/usr/share/man/man7/nfsd.7.gz
-/usr/share/man/man8/exportfs.8.gz
-/usr/share/man/man8/gssd.8.gz
-/usr/share/man/man8/idmapd.8.gz
-/usr/share/man/man8/mount.nfs.8.gz
-/usr/share/man/man8/mount.nfs4.8.gz
-/usr/share/man/man8/mountd.8.gz
-/usr/share/man/man8/mountstats.8.gz
-/usr/share/man/man8/nfsd.8.gz
-/usr/share/man/man8/nfsidmap.8.gz
-/usr/share/man/man8/nfsiostat.8.gz
-/usr/share/man/man8/nfsstat.8.gz
-/usr/share/man/man8/rpc.gssd.8.gz
-/usr/share/man/man8/rpc.idmapd.8.gz
-/usr/share/man/man8/rpc.mountd.8.gz
-/usr/share/man/man8/rpc.nfsd.8.gz
-/usr/share/man/man8/rpc.sm-notify.8.gz
-/usr/share/man/man8/rpc.statd.8.gz
-/usr/share/man/man8/rpc.svcgssd.8.gz
-/usr/share/man/man8/rpcdebug.8.gz
-/usr/share/man/man8/showmount.8.gz
-/usr/share/man/man8/sm-notify.8.gz
-/usr/share/man/man8/statd.8.gz
-/usr/share/man/man8/svcgssd.8.gz
-/usr/share/man/man8/umount.nfs.8.gz
-/usr/share/man/man8/umount.nfs4.8.gz
+/usr/share/doc/n7/nfsd.7.gz
+... ...
 /var/lib/nfs
 /var/lib/nfs/etab
 /var/lib/nfs/rmtab
@@ -218,8 +150,7 @@ setup-2.8.14-20.el6_4.1.noarch
 
 **服务名** `rpcbind` `nfs`
 
-根据要求，允许172.25.X.10这个客户端来挂接使用/tmp目录，有读写权限。配置`/etc/exports`内容
-为`/tmp 172.25.0.10(rw)`后，根据服务名来打开相应的服务
+根据要求，允许172.25.X.10这个客户端来挂接使用/tmp目录，有读写权限。配置`/etc/exports`内容为`/tmp 172.25.0.10(rw)`后，根据服务名来打开相应的服务
 
 ```shell
 [root@rhel6 ~]# vim /etc/exports
@@ -355,8 +286,7 @@ Starting NFS daemon:                                       [  OK  ]
 Starting RPC idmapd:                                       [  OK  ]
 ```
 
-> 分别在客户端和服务器上都创建一个id=1200的用户tom，在客户端用tom用户新建一个文件rhel7tomfile，并查看属性，再到服务器上去查看该文件的属性；
-在服务器上用tom用户去创建rhel6tomfile，查看属性，再到客户端上查看属性。
+> 分别在客户端和服务器上都创建一个id=1200的用户tom，在客户端用tom用户新建一个文件rhel7tomfile，并查看属性，再到服务器上去查看该文件的属性；在服务器上用tom用户去创建rhel6tomfile，查看属性，再到客户端上查看属性。
 
 ```shell
 # 服务端rhel6
@@ -396,8 +326,7 @@ drwx------. 2 gdm  gdm  4096 Sep 25 14:59 pulse-q5sECpImz7Ju
 -rw-rw-r--. 1 tom  tom     0 Sep 25 16:07 rhel7tomfile
 ```
 
-两个新文件在客户端均显示属于nobody，而在服务器端显示属于tom用户，
-并且会发现在客户端由tom用户创建出来的文件也没有办法删除。
+两个新文件在客户端均显示属于nobody，而在服务器端显示属于tom用户，并且会发现在客户端由tom用户创建出来的文件也没有办法删除。
 
 这是由于当前服务器版本比客户端低的缘故。
 
@@ -628,8 +557,7 @@ mount.nfs: Connection timed out
 
 #### autofs 自动挂接服务
 
-使用的时候挂接，不使用等待5分钟后卸载，而等待的时间时可以调整的，在`/etc/sysconfig/autofs`配置
-文件中通过`TIMEOUT`参数调整，例如`TIMEOUT=300`。
+使用的时候挂接，不使用等待5分钟后卸载，而等待的时间时可以调整的，在`/etc/sysconfig/autofs`配置文件中通过`TIMEOUT`参数调整，例如`TIMEOUT=300`。
 
 1. 软件		autofs
 2. service		autofs

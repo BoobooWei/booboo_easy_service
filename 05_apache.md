@@ -1,17 +1,7 @@
 ## APACHE WEB服务
 
-- [APACHE WEB服务](#apache-web服务)
-	- [Web基础](#web基础)
-	- [Apache的简介](#apache的简介)
-	- [Apache的软件结构](#apache的软件结构)
-	- [APACHE虚拟主机方案](#apache虚拟主机方案)
-	- [APACHE实践](#apache实践)
-		- [项目实践1：配置基于端口的虚拟主机](#项目实践1配置基于端口的虚拟主机)
-		- [项目实践2：配置基于名称的虚拟主机](#项目实践2配置基于名称的虚拟主机)
-		- [项目实践3：配置基于名称的虚拟主机针对某一个目录做限制](#项目实践3配置基于名称的虚拟主机针对某一个目录做限制)
-		- [项目实践4：配置基于名称的虚拟主机_别名](#项目实践4配置基于名称的虚拟主机别名)
-		- [项目实践4：配置基于名称的虚拟主机_用户名和密码访问](#项目实践4配置基于名称的虚拟主机用户名和密码访问)
-	- [配置文件/etc/httpd/conf/httpd.conf](#配置文件etchttpdconfhttpdconf)
+[TOC]
+
 ---
 ### Web基础
 
@@ -20,6 +10,7 @@
 HTTP是Hypertext Transfer Protocol的缩写，即超文本传输协议。 顾名思义，HTTP提供了访问超文本信息的功能，是WWW浏览器和WWW服务器之间的应用层通信协议。HTTP协议是用于分布式协作超文本信息系统的、通用的、面向对象的协议。通过扩展命令，它可用于类似的任务，如域名服务或分布式面向对象系统。WWW使用HTTP协议传输各种超文本页面和数据。
 
 网页文件是用HTML（标准通用标记语言下的一个应用）编写的，可在WWW上传输，能被浏览器识别显示的文本文件。其扩展名是.htm和.html。
+
 Web的服务器最常见的有windows上的IIS，还有linux上的apache。另外还有例如nginx等的轻量级服务器。都是比较常用的一些服务器。我们基础课主要简单介绍一些apache的一个简单搭建。
 
 ### Apache的简介
@@ -32,6 +23,7 @@ Apache 起初由 Illinois 大学 Urbana-Champaign 的国家高级计算程序中
 开始，Apache只是Netscape网页服务器（现在是Sun ONE）的之外的开放源代码选择。渐渐的，它开始在功能和速度。超越其他的基于Unix的HTTP服务器。1996年4月以来，Apache一直是Internet上最流行的HTTP服务器: 1999年5月它在 57% 的网页服务器上运行；到了2005年7月这个比例上升到了69%。
 
 作者宣称因为这个名字好记才在最初选择它，但是流传最广的解释是（也是最显而易见的）:这个名字来自这么一个事实:当Apache在1995年初开发的时候，它是由当时最流行的HTTP服务器NCSA HTTPd 1.3 的代码修改而成的，因此是“一个修补的（a patchy）”服务器。然而在服务器官方网站的FAQ中是这么解释的:“‘Apache’这个名字是为了纪念名为Apache(印地语)的美洲印第安人土著的一支，众所周知他们拥有高超的作战策略和无穷的耐性”。
+
 Apache的软件名称就叫做httpd，这里要注意一下，这里我们以el6作为服务器，el7作为客户端。
 
 ### Apache的软件结构
@@ -50,7 +42,7 @@ daemon		httpd
 日志文件	/var/log/httpd
 ```
 
-### APACHE虚拟主机方案
+### Apache虚拟主机方案
 
 1. 基于端口的虚拟主机
 ```shell
@@ -62,7 +54,7 @@ www.uplooking.com:8080	---->	/var/www/abc.com/
 www.uplooking.com----/var/www/uplooking.com/
 www.abc.com----/var/www/abc.com/
 ```
-### APACHE实践
+### Apache实践
 
 #### 项目实践1：配置基于端口的虚拟主机
 ```shell
@@ -179,6 +171,7 @@ Last login: Fri Aug  5 03:14:10 2016
 
 
 #### 项目实践3：配置基于名称的虚拟主机针对某一个目录做限制
+
 ```shell
 	Directory是针对某一个目录做限制的意思。
 		Options
@@ -197,8 +190,9 @@ Last login: Fri Aug  5 03:14:10 2016
 ```
 
 #### 项目实践4：配置基于名称的虚拟主机_别名
+
 * 别名		alias
-h 作用h在访问该目录的时候,无论之前的虚拟主机站点名是什么,会统一转到某一个指定的目录。
+* 作用	在访问该目录的时候,无论之前的虚拟主机站点名是什么,会统一转到某一个指定的目录。
 
 `Alias /download/ /"var/www/soft/"`
 
@@ -271,7 +265,7 @@ On Windows, NetWare and TPF systems the '-m' flag is used by default.
 On all other systems, the '-p' flag will probably not work.
 
 ```
-#### 项目实践五 在rhel7中搭建apahce，实现
+#### 项目实践5 在rhel7中搭建apahce，实现
 
 * 配置基于名称的虚拟主机 www.abc.com 和 www.uplooking.com
 
@@ -315,7 +309,8 @@ require host  uplooking.com
 ```
 ---
 
-### 配置文件/etc/httpd/conf/httpd.conf
+### Apache配置文件/etc/httpd/conf/httpd.conf
+
 ```shell
 1）
 # ServerRoot “/etc/httpd“
