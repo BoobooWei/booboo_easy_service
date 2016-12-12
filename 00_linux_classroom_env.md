@@ -103,6 +103,7 @@ rhel6.5 SElinux有bug，光盘中默认没有selinux相关manpage，看manpage�
 ### services 和 daemons
 
 |服务名|守护进程名|
+|:--|:--|
 |rsyslog|rsyslogd|
 |atd|atd|
 |crond|crond|
@@ -224,13 +225,18 @@ xinetd本身就是一个系统服务，通过 System V来对其进行管理，�
 
 **RHEL 6**
 
-* 服务的启动 停止 重启 状态	`service 服务名 [start | stop | restart | status]`
-* 服务开机启动状态		`chkconfig --list`
-* 设置服务开机启动		`chkconfig 服务名 on`
-* 设置服务开机不启动		`chkconfig 服务名 off`
+服务的启动 停止 重启 状态	`service 服务名 [start | stop | restart | status]`
+
+服务开机启动状态		`chkconfig --list`
+
+设置服务开机启动		`chkconfig 服务名 on`
+
+设置服务开机不启动		`chkconfig 服务名 off`
 
 **RHEL 7**
 
-* 服务的启动 停止 重启 状态	`systemctl  服务名 [start | stop | restart | status]`
-* 设置服务开机启动		`systemctl  服务名 enable`
-* 设置服务开机不启动		`systemctl  服务名 disable`
+服务的启动 停止 重启 状态	`systemctl [start | stop | restart | status] 服务名 `
+
+设置服务开机启动		`systemctl enable 服务名`
+
+设置服务开机不启动		`systemctl disable 服务名`
