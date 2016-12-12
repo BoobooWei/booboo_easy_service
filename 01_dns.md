@@ -108,14 +108,14 @@ bbs	CNAME	ftp
 |:--|:--|:--|
 |1)|安装软件| 	bind bind-chroot|
 |2)|查看软件架构|	rpm -ql |
-||		日志	/var/log/named.log|
-||		数据	/var/named/|
-||		配置	/etc/named.conf|
+||		日志|	/var/log/named.log|
+||		数据|	/var/named/|
+||		配置|	/etc/named.conf|
 |||			/etc/named.rfc1912.zones|
 |3)|修改配置文件||
 |4)|启动服务|
-||		service	daemon|
-||		named	named|
+||		service|named|
+||		daemon|	named|
 |4.1）|排除错误|	看日志|
 |5)|测试|	nslookup|
 |5.1）|排错|	看日志|
@@ -807,7 +807,7 @@ IN  SOA @ 用户名.域名  {
      1D；refresh  // 多久做一次同步
      1H；retry    //重置时间，同步不成功时，间隔多久重新做一次同步
      1W；expire   //当重复同步不成功时，多久不再做同步。
-3H；minimun  //最小缓存时间，一般是错误缓存。假设有一个人，一直问我一个错误的域名，那我就会将该错误的域名缓存下来，
+	 3H；minimun  //最小缓存时间，一般是错误缓存。假设有一个人，一直问我一个错误的域名，那我就会将该错误的域名缓存下来，
 当人再来问我时，我就不再搜寻，而将该结果反馈给他。
 
 这里将serial一列改为当前日期。
