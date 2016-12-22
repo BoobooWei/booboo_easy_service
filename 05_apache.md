@@ -49,7 +49,7 @@ daemon		httpd
 www.uplooking.com:80	---->	/var/www/uplooking.com/
 www.uplooking.com:8080	---->	/var/www/abc.com/
 ```
-2. 基于名称的虚拟主机
+1. 基于名称的虚拟主机
 ```shell
 www.uplooking.com----/var/www/uplooking.com/
 www.abc.com----/var/www/abc.com/
@@ -101,7 +101,7 @@ pegasus_https_port_t           tcp      5989
 
 #### 项目实践2：配置基于名称的虚拟主机
 
- ```shell
+```shell
 	www.taobao.com		/var/www/taobao.com/
 	www.abc.com		/var/www/abc.com/
 *******************************************************
@@ -192,7 +192,7 @@ Last login: Fri Aug  5 03:14:10 2016
 #### 项目实践4：配置基于名称的虚拟主机_别名
 
 * 别名		alias
-* 作用	在访问该目录的时候,无论之前的虚拟主机站点名是什么,会统一转到某一个指定的目录。
+  * 作用在访问该目录的时候,无论之前的虚拟主机站点名是什么,会统一转到某一个指定的目录。
 
 `Alias /download/ /"var/www/soft/"`
 
@@ -201,10 +201,10 @@ Last login: Fri Aug  5 03:14:10 2016
 #### 项目实践4：配置基于名称的虚拟主机_用户名和密码访问
 
 *		1）配置文件中添加认证	AllowOverride AuthConfig
-*		2）创建认证文件和用户密码	htpasswd -cmb /etc/httpd/test booboo uplooking
-*		3）新增用户和密码		htpasswd -bm /etc/httpd/test tom uplooking
-*		4）删除用户		htpasswd -D /etc/httpd/test jack
-*		5）修改密码		先删除再创建
+    *	2）创建认证文件和用户密码	htpasswd -cmb /etc/httpd/test booboo uplooking
+       *3）新增用户和密码		htpasswd -bm /etc/httpd/test tom uplooking
+       *4）删除用户		htpasswd -D /etc/httpd/test jack
+       *5）修改密码		先删除再创建
 
 ```shell
 设置用户和密码
@@ -265,7 +265,7 @@ On Windows, NetWare and TPF systems the '-m' flag is used by default.
 On all other systems, the '-p' flag will probably not work.
 
 ```
-#### 项目实践5 在rhel7中搭建apahce，实现
+#### 项目实践5：在rhel7中搭建apahce，实现以下功能
 
 * 配置基于名称的虚拟主机 www.abc.com 和 www.uplooking.com
 
